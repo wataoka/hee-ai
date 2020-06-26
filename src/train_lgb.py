@@ -16,14 +16,12 @@ def objective(trial):
 
     max_depth = trial.suggest_int('max_depth', 1, 20)
     learning_rate = trial.suggest_uniform('learning_rate', 0.001, 0.1)
-    scale_pos_weight = trial.suggest_uniform('scale_pos_weight', 1.0, 12.0)
     params = {
         'metric': 'l2',
         'num_leaves': trial.suggest_int("num_leaves", 2, 70),
         'max_depth': max_depth,
         'learning_rate': learning_rate,
         'objective': 'regression',
-        'scale_pos_weight': scale_pos_weight,
         'verbose': 0
     }
 
@@ -54,7 +52,7 @@ def objective(trial):
 def build_model():
 
     study = optuna.create_study()
-    study.optimize(objective, n_trials=10)
+    study.optimize(objective, n_trials=500)
 
     valid_split = 0.2
     num_train = int((1-valid_split)*len(X))
@@ -69,8 +67,6 @@ def build_model():
 
     params = study.best_params
     params['metric'] = 'l2'
-    print(params)
-    quit()
     model = lgb.train(params,
                       lgb_data,
                       valid_sets=lgb_valid,
