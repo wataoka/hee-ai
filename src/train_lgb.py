@@ -69,6 +69,8 @@ def build_model():
 
     params = study.best_params
     params['metric'] = 'l2'
+    print(params)
+    quit()
     model = lgb.train(params,
                       lgb_data,
                       valid_sets=lgb_valid,
